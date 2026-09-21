@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shiva Sai Reddy Bommireddy — Software Engineer</title>
+<meta name="description" content="Backend engineer building document-processing pipelines on AWS — Lambda, OCR/IDP, GPT validation, HITL review.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #120D0A;
+    --surface: #1C140F;
+    --surface-2: #241A13;
+    --text: #ECE4DA;
+    --text-dim: #A8998A;
+    --text-dimmer: #6B5D52;
+    --accent: #C97B3D;
+    --accent-2: #9C6B44;
+    --line: #33261D;
+    --line-soft: #241A13;
+    --radius: 3px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection{ background: var(--accent); color: #150F0B; }
+
+  a{ color: var(--accent-2); text-decoration: none; }
+  a:hover{ text-decoration: underline; }
+  a:focus-visible, button:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .wrap{
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  @media (max-width: 640px){
+    .wrap{ padding: 0 22px; }
+  }
+
+  header.top{
+    padding: 28px 0 0;
+  }
+  .top-row{
+    display:flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line-soft);
+    padding-bottom: 18px;
+  }
+  .top-row .id{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+  }
+  nav.top-nav{
+    display:flex;
+    gap: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+  }
+  nav.top-nav a{ color: var(--text-dim); }
+  nav.top-nav a:hover{ color: var(--accent-2); text-decoration: none; }
+
+  /* Hero */
+  section.hero{
+    padding: 56px 0 8px;
+  }
+  h1.name{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(34px, 6vw, 50px);
+    line-height: 1.08;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  p.role{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 19px;
+    color: var(--accent);
+    margin: 0 0 18px;
+  }
+  p.blurb{
+    max-width: 60ch;
+    color: var(--text-dim);
+    font-size: 16px;
+    margin: 0;
+  }
+  p.blurb strong{ color: var(--text); font-weight: 500; }
+
+  .hero-meta{
+    margin-top: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .hero-meta-row{
+    font-size: 15px;
+    color: var(--text);
+  }
+  .hm-label{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text-dimmer);
+    display: inline-block;
+    width: 44px;
+  }
+
+  /* Pipeline diagram */
+  .diagram-frame{
+    margin-top: 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    padding: 22px 18px 16px;
+  }
+  .diagram-caption{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text-dimmer);
+    margin: 12px 2px 0;
+  }
+  svg.pipeline{ width: 100%; height: auto; display: block; }
+  .p-node rect{
+    fill: var(--surface-2);
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+  .p-node text{
+    font-family: 'IBM Plex Mono', monospace;
+    fill: var(--text);
+  }
+  .p-node .sub{ fill: var(--text-dimmer); }
+  .p-edge{
+    fill: none;
+    stroke: var(--accent-2);
+    stroke-width: 1.4;
+    stroke-dasharray: 6 5;
+    opacity: 0.85;
+  }
+  .p-edge.draw{
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+    animation: draw 1.8s ease-out forwards;
+  }
+  @keyframes draw{ to{ stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce){
+    .p-edge.draw{ animation: none; stroke-dashoffset: 0; }
+  }
+
+  /* Section scaffolding */
+  section.block{
+    padding: 44px 0;
+    border-top: 1px solid var(--line-soft);
+  }
+  h2.section-title{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+    text-transform: none;
+    letter-spacing: 0.02em;
+    margin: 0 0 28px;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+  }
+  h2.section-title::before{
+    content: '';
+    width: 14px;
+    height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  /* Experience */
+  .job{
+    display: grid;
+    grid-template-columns: 108px 1fr;
+    gap: 22px;
+    margin-bottom: 38px;
+  }
+  .job:last-child{ margin-bottom: 0; }
+  .job-dates{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text-dimmer);
+    padding-top: 3px;
+  }
+  .job-role{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0 0 2px;
+  }
+  .job-org{
+    color: var(--text-dim);
+    font-size: 14.5px;
+    margin: 0 0 12px;
+  }
+  .job ul{
+    margin: 0 0 14px;
+    padding-left: 18px;
+  }
+  .job li{
+    margin-bottom: 7px;
+    color: var(--text);
+    font-size: 15px;
+  }
+  .job li::marker{ color: var(--accent-2); }
+
+  .tags{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .tag{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text-dim);
+    border: 1px solid var(--line);
+    padding: 3px 8px;
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  @media (max-width: 560px){
+    .job{ grid-template-columns: 1fr; gap: 6px; }
+  }
+
+  /* Projects */
+  .projects-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 640px){
+    .projects-grid{ grid-template-columns: 1fr; }
+  }
+  .project-card{
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+    background: var(--surface);
+  }
+  .project-card h3{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16.5px;
+    margin: 0 0 8px;
+    font-weight: 600;
+  }
+  .project-card p{
+    font-size: 14.5px;
+    color: var(--text-dim);
+    margin: 0 0 14px;
+  }
+  .project-card .tags{ margin-bottom: 14px; }
+  .project-card a{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+  }
+
+  /* Achievements */
+  .ach-list{
+    margin: 0;
+    padding-left: 18px;
+  }
+  .ach-list li{
+    margin-bottom: 10px;
+    font-size: 15px;
+  }
+  .ach-list li::marker{ color: var(--accent); }
+
+  /* Education */
+  .edu-row{
+    display:flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: baseline;
+  }
+  .edu-school{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+  }
+  .edu-degree{ color: var(--text-dim); font-size: 14.5px; margin-top: 4px; }
+  .edu-dates{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text-dimmer);
+  }
+
+  /* Contact / footer */
+  footer{
+    padding: 44px 0 60px;
+    border-top: 1px solid var(--line-soft);
+  }
+  footer h2.section-title{ margin-bottom: 18px; }
+  .contact-links{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 22px 28px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+  }
+  .contact-links a{ color: var(--text); }
+  .contact-links a:hover{ color: var(--accent-2); }
+  .contact-links .lbl{ color: var(--text-dimmer); margin-right: 6px; }
+  .foot-note{
+    margin-top: 32px;
+    font-size: 12.5px;
+    color: var(--text-dimmer);
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="top-row">
+      <span class="id">shiva-sai-reddy · backend engineer</span>
+      <nav class="top-nav">
+        <a href="#experience">work</a>
+        <a href="#projects">projects</a>
+        <a href="#contact">contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1 class="name">Shiva Sai Reddy Bommireddy</h1>
+    <p class="blurb">
+      I build the backend systems that turn scanned insurance and medical documents into
+      structured, verified data.
+    </p>
+    <div class="hero-meta">
+      <div class="hero-meta-row"><span class="hm-label">now</span> Software Engineer at Singularium Technologies</div>
+      <div class="hero-meta-row"><span class="hm-label">grad</span> B.Tech CS, IIT Bhilai · 2023</div>
+    </div>
+  </section>
+
+  <section class="block" id="pipeline">
+    <h2 class="section-title">what I build</h2>
+    <p class="blurb" style="margin-bottom: 24px;">
+      <strong>Dockerized Lambda pipelines</strong>, OCR/IDP extraction, GPT-based validation, and
+      human-in-the-loop review, running at production scale on AWS.
+    </p>
+    <div class="diagram-frame">
+      <svg class="pipeline" viewBox="0 0 720 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Document processing pipeline: S3 upload flows to a Dockerized Lambda function, then OCR and IDP extraction, then GPT validation, then human review, then storage in RDS and DynamoDB.">
+        <g class="p-node">
+          <rect x="6" y="46" width="96" height="58" rx="3"/>
+          <text x="54" y="70" font-size="12" text-anchor="middle">S3 upload</text>
+          <text x="54" y="87" font-size="10" text-anchor="middle" class="sub">raw document</text>
+        </g>
+        <path class="p-edge draw" d="M102 75 H150" />
+        <g class="p-node">
+          <rect x="150" y="40" width="112" height="70" rx="3"/>
+          <text x="206" y="63" font-size="12" text-anchor="middle">Lambda</text>
+          <text x="206" y="79" font-size="10" text-anchor="middle" class="sub">Dockerized</text>
+          <text x="206" y="94" font-size="10" text-anchor="middle" class="sub">SHA-256 hash</text>
+        </g>
+        <path class="p-edge draw" d="M262 75 H310" />
+        <g class="p-node">
+          <rect x="310" y="34" width="120" height="82" rx="3"/>
+          <text x="370" y="58" font-size="12" text-anchor="middle">OCR / IDP</text>
+          <text x="370" y="74" font-size="10" text-anchor="middle" class="sub">Azure Doc Intel.</text>
+          <text x="370" y="88" font-size="10" text-anchor="middle" class="sub">DOTS OCR + vLLM</text>
+          <text x="370" y="102" font-size="10" text-anchor="middle" class="sub">Redis cached</text>
+        </g>
+        <path class="p-edge draw" d="M430 75 H478" />
+        <g class="p-node">
+          <rect x="478" y="40" width="112" height="70" rx="3"/>
+          <text x="534" y="63" font-size="12" text-anchor="middle">GPT rules</text>
+          <text x="534" y="79" font-size="10" text-anchor="middle" class="sub">insurer-specific</text>
+          <text x="534" y="94" font-size="10" text-anchor="middle" class="sub">branching</text>
+        </g>
+        <path class="p-edge draw" d="M590 75 H614 V26 H648" />
+        <path class="p-edge draw" d="M590 75 H614 V124 H648" />
+        <g class="p-node">
+          <rect x="648" y="6" width="66" height="40" rx="3"/>
+          <text x="681" y="24" font-size="10.5" text-anchor="middle">HITL</text>
+          <text x="681" y="37" font-size="9" text-anchor="middle" class="sub">review</text>
+        </g>
+        <g class="p-node">
+          <rect x="648" y="104" width="66" height="40" rx="3"/>
+          <text x="681" y="122" font-size="10.5" text-anchor="middle">RDS +</text>
+          <text x="681" y="135" font-size="9" text-anchor="middle" class="sub">DynamoDB</text>
+        </g>
+      </svg>
+      <p class="diagram-caption">The QC &amp; digitization pipeline I built and maintain in production — from raw upload to a human-reviewed, insurer-ready record.</p>
+    </div>
+  </section>
+
+  <section class="block" id="experience">
+    <h2 class="section-title">experience</h2>
+
+    <div class="job">
+      <div class="job-dates">Apr 2025 —<br>present</div>
+      <div>
+        <h3 class="job-role">Software Engineer</h3>
+        <p class="job-org">Singularium Technologies · Bengaluru</p>
+        <ul>
+          <li>Built Flask document-processing workflows and a doctor interpretation system, deployed with Gunicorn behind an Nginx reverse proxy for load balancing and rate limiting.</li>
+          <li>Developed an end-to-end QC and digitization system using Dockerized AWS Lambda functions with IDP-driven AI rule validation, insurer-specific branching, and HITL review — automated with GitHub Actions CI/CD.</li>
+          <li>Integrated DOTS OCR and vLLM on AWS g6.xlarge (L4 GPU) instances, resolving multi-VM migration issues and cutting monthly infra costs by roughly 45%.</li>
+          <li>Implemented SHA-256 content hashing at ingestion and a Redis caching layer for recurring Azure Document Intelligence and GPT API calls.</li>
+          <li>Engineered a dual-database storage layer — AWS RDS MySQL for structured workflows and DynamoDB with custom partition keys for low-latency retrieval.</li>
+        </ul>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">Flask</span><span class="tag">Gunicorn</span>
+          <span class="tag">Nginx</span><span class="tag">AWS Lambda</span><span class="tag">Docker</span>
+          <span class="tag">MySQL</span><span class="tag">DynamoDB</span><span class="tag">Redis</span>
+          <span class="tag">IDP</span><span class="tag">OpenAI</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="job">
+      <div class="job-dates">Dec 2023 —<br>Aug 2024</div>
+      <div>
+        <h3 class="job-role">Software Developer Intern</h3>
+        <p class="job-org">Novaluna Technologies · Remote</p>
+        <ul>
+          <li>Built an AI-powered Patient Coordination System in Node.js with TypeORM transactions, SQS-based async calendar webhook processing, and Socket.io real-time appointment updates.</li>
+          <li>Developed RESTful APIs for appointment filtering with JWT access control, backed by PostgreSQL with composite B-tree indexing.</li>
+          <li>Integrated an AI chatbot using deterministic LLM function-calling for automated patient triage.</li>
+          <li>Implemented Redis-based distributed locking (SET NX + TTL) with token-validated release around TypeORM transactional writes.</li>
+        </ul>
+        <div class="tags">
+          <span class="tag">Node.js</span><span class="tag">Express</span><span class="tag">PostgreSQL</span>
+          <span class="tag">WebSockets</span><span class="tag">OpenAI API</span><span class="tag">REST</span><span class="tag">JWT</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="projects">
+    <h2 class="section-title">projects</h2>
+    <div class="projects-grid">
+      <div class="project-card">
+        <h3>Shopping Cart System</h3>
+        <p>Full-scale eCommerce platform with product/order modules, authentication, and secure payment and shipping API integrations — improved MySQL query performance by 85% using Redis and Elasticsearch caching.</p>
+        <div class="tags">
+          <span class="tag">Django</span><span class="tag">PHP</span><span class="tag">MySQL</span>
+          <span class="tag">Docker</span><span class="tag">Redis</span><span class="tag">Elasticsearch</span>
+        </div>
+        <a href="#">View on GitHub →</a>
+      </div>
+      <div class="project-card">
+        <h3>Drive and Deliver Services</h3>
+        <p>Real-time ride-sharing and delivery platform with WebSocket-based communication, GraphQL APIs, PostgreSQL, and MongoDB — supporting driver-rider matching, live location updates, and delivery workflows.</p>
+        <div class="tags">
+          <span class="tag">TypeScript</span><span class="tag">Node.js</span><span class="tag">React</span>
+          <span class="tag">GraphQL</span><span class="tag">Kafka</span><span class="tag">Kubernetes</span>
+        </div>
+        <a href="#">View on GitHub →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="section-title">achievements &amp; certifications</h2>
+    <ul class="ach-list">
+      <li>5-star rating and Gold Badge in C++, Python, and Problem Solving on HackerRank.</li>
+      <li>All India Rank 4597 in JEE Advanced 2019, among 1.2 million candidates.</li>
+      <li>Geet Amal Ghosh Roy Award — top rank in JEE Advanced among IIT Bhilai's 2019 batch.</li>
+      <li>1000+ problems solved across LeetCode, HackerRank, and other coding platforms.</li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <h2 class="section-title">education</h2>
+    <div class="edu-row">
+      <div>
+        <div class="edu-school">Indian Institute of Technology (IIT) Bhilai</div>
+        <div class="edu-degree">B.Tech in Computer Science</div>
+      </div>
+      <div class="edu-dates">2019 — 2023</div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <h2 class="section-title">contact</h2>
+    <div class="contact-links">
+      <div><span class="lbl">email</span><a href="mailto:shivasaireddy2505@gmail.com">shivasaireddy2505@gmail.com</a></div>
+      <div><span class="lbl">phone</span><a href="tel:+919390246254">+91 93902 46254</a></div>
+      <div><span class="lbl">linkedin</span><a href="#" id="linkedin-link">add your URL</a></div>
+      <div><span class="lbl">github</span><a href="#" id="github-link">add your URL</a></div>
+    </div>
+    <p class="foot-note">Built by Shiva Sai Reddy Bommireddy.</p>
+  </footer>
+</div>
+
+</body>
+</html>
