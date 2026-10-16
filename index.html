@@ -1,511 +1,261 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Shiva Sai Reddy Bommireddy — Software Engineer</title>
-<meta name="description" content="Backend engineer building document-processing pipelines on AWS — Lambda, OCR/IDP, GPT validation, HITL review.">
+<meta name="description" content="Software engineer building AI document pipelines that know when they're wrong: self-hosted OCR and LLMs, verifiable checks, AWS. IIT Bhilai.">
+<meta property="og:title" content="Shiva Sai Reddy Bommireddy — Software Engineer">
+<meta property="og:description" content="AI document pipelines that know when they're wrong. Live demos inside.">
+<meta property="og:image" content="https://shivasaireddy-portfolio.netlify.app/assets/docflow-review.webp">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23101828'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11.5' stroke='%23FFE14D' stroke-width='3.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg: #120D0A;
-    --surface: #1C140F;
-    --surface-2: #241A13;
-    --text: #ECE4DA;
-    --text-dim: #A8998A;
-    --text-dimmer: #6B5D52;
-    --accent: #C97B3D;
-    --accent-2: #9C6B44;
-    --line: #33261D;
-    --line-soft: #241A13;
-    --radius: 3px;
-  }
-
-  *{ box-sizing: border-box; }
-  html{ scroll-behavior: smooth; }
-  body{
-    margin:0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  ::selection{ background: var(--accent); color: #150F0B; }
-
-  a{ color: var(--accent-2); text-decoration: none; }
-  a:hover{ text-decoration: underline; }
-  a:focus-visible, button:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
-
-  .wrap{
-    max-width: 1040px;
-    margin: 0 auto;
-    padding: 0 48px;
-  }
-  @media (max-width: 640px){
-    .wrap{ padding: 0 22px; }
-  }
-
-  header.top{
-    padding: 28px 0 0;
-  }
-  .top-row{
-    display:flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 16px;
-    flex-wrap: wrap;
-    border-bottom: 1px solid var(--line-soft);
-    padding-bottom: 18px;
-  }
-  .top-row .id{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    color: var(--text-dim);
-    letter-spacing: 0.02em;
-  }
-  nav.top-nav{
-    display:flex;
-    gap: 20px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-  }
-  nav.top-nav a{ color: var(--text-dim); }
-  nav.top-nav a:hover{ color: var(--accent-2); text-decoration: none; }
-
-  /* Hero */
-  section.hero{
-    padding: 56px 0 8px;
-  }
-  h1.name{
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: clamp(34px, 6vw, 50px);
-    line-height: 1.08;
-    margin: 0 0 10px;
-    letter-spacing: -0.01em;
-  }
-  p.role{
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 500;
-    font-size: 19px;
-    color: var(--accent);
-    margin: 0 0 18px;
-  }
-  p.blurb{
-    max-width: 60ch;
-    color: var(--text-dim);
-    font-size: 16px;
-    margin: 0;
-  }
-  p.blurb strong{ color: var(--text); font-weight: 500; }
-
-  .hero-meta{
-    margin-top: 26px;
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-  }
-  .hero-meta-row{
-    font-size: 15px;
-    color: var(--text);
-  }
-  .hm-label{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11.5px;
-    color: var(--text-dimmer);
-    display: inline-block;
-    width: 44px;
-  }
-
-  /* Pipeline diagram */
-  .diagram-frame{
-    margin-top: 24px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--surface);
-    padding: 22px 18px 16px;
-  }
-  .diagram-caption{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11.5px;
-    color: var(--text-dimmer);
-    margin: 12px 2px 0;
-  }
-  svg.pipeline{ width: 100%; height: auto; display: block; }
-  .p-node rect{
-    fill: var(--surface-2);
-    stroke: var(--line);
-    stroke-width: 1;
-  }
-  .p-node text{
-    font-family: 'IBM Plex Mono', monospace;
-    fill: var(--text);
-  }
-  .p-node .sub{ fill: var(--text-dimmer); }
-  .p-edge{
-    fill: none;
-    stroke: var(--accent-2);
-    stroke-width: 1.4;
-    stroke-dasharray: 6 5;
-    opacity: 0.85;
-  }
-  .p-edge.draw{
-    stroke-dasharray: 500;
-    stroke-dashoffset: 500;
-    animation: draw 1.8s ease-out forwards;
-  }
-  @keyframes draw{ to{ stroke-dashoffset: 0; } }
-  @media (prefers-reduced-motion: reduce){
-    .p-edge.draw{ animation: none; stroke-dashoffset: 0; }
-  }
-
-  /* Section scaffolding */
-  section.block{
-    padding: 44px 0;
-    border-top: 1px solid var(--line-soft);
-  }
-  h2.section-title{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    color: var(--text-dim);
-    text-transform: none;
-    letter-spacing: 0.02em;
-    margin: 0 0 28px;
-    display:flex;
-    align-items:center;
-    gap: 10px;
-  }
-  h2.section-title::before{
-    content: '';
-    width: 14px;
-    height: 1px;
-    background: var(--accent);
-    display: inline-block;
-  }
-
-  /* Experience */
-  .job{
-    display: grid;
-    grid-template-columns: 108px 1fr;
-    gap: 22px;
-    margin-bottom: 38px;
-  }
-  .job:last-child{ margin-bottom: 0; }
-  .job-dates{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12.5px;
-    color: var(--text-dimmer);
-    padding-top: 3px;
-  }
-  .job-role{
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 18px;
-    margin: 0 0 2px;
-  }
-  .job-org{
-    color: var(--text-dim);
-    font-size: 14.5px;
-    margin: 0 0 12px;
-  }
-  .job ul{
-    margin: 0 0 14px;
-    padding-left: 18px;
-  }
-  .job li{
-    margin-bottom: 7px;
-    color: var(--text);
-    font-size: 15px;
-  }
-  .job li::marker{ color: var(--accent-2); }
-
-  .tags{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-  }
-  .tag{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11.5px;
-    color: var(--text-dim);
-    border: 1px solid var(--line);
-    padding: 3px 8px;
-    border-radius: var(--radius);
-    background: var(--surface);
-  }
-
-  @media (max-width: 560px){
-    .job{ grid-template-columns: 1fr; gap: 6px; }
-  }
-
-  /* Projects */
-  .projects-grid{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-  }
-  @media (max-width: 640px){
-    .projects-grid{ grid-template-columns: 1fr; }
-  }
-  .project-card{
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 20px;
-    background: var(--surface);
-  }
-  .project-card h3{
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 16.5px;
-    margin: 0 0 8px;
-    font-weight: 600;
-  }
-  .project-card p{
-    font-size: 14.5px;
-    color: var(--text-dim);
-    margin: 0 0 14px;
-  }
-  .project-card .tags{ margin-bottom: 14px; }
-  .project-card a{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12.5px;
-  }
-
-  /* Achievements */
-  .ach-list{
-    margin: 0;
-    padding-left: 18px;
-  }
-  .ach-list li{
-    margin-bottom: 10px;
-    font-size: 15px;
-  }
-  .ach-list li::marker{ color: var(--accent); }
-
-  /* Education */
-  .edu-row{
-    display:flex;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-    align-items: baseline;
-  }
-  .edu-school{
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 17px;
-  }
-  .edu-degree{ color: var(--text-dim); font-size: 14.5px; margin-top: 4px; }
-  .edu-dates{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12.5px;
-    color: var(--text-dimmer);
-  }
-
-  /* Contact / footer */
-  footer{
-    padding: 44px 0 60px;
-    border-top: 1px solid var(--line-soft);
-  }
-  footer h2.section-title{ margin-bottom: 18px; }
-  .contact-links{
-    display:flex;
-    flex-wrap: wrap;
-    gap: 22px 28px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 14px;
-  }
-  .contact-links a{ color: var(--text); }
-  .contact-links a:hover{ color: var(--accent-2); }
-  .contact-links .lbl{ color: var(--text-dimmer); margin-right: 6px; }
-  .foot-note{
-    margin-top: 32px;
-    font-size: 12.5px;
-    color: var(--text-dimmer);
-  }
-</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<div class="wrap">
-  <header class="top">
-    <div class="top-row">
-      <span class="id">shiva-sai-reddy · backend engineer</span>
-      <nav class="top-nav">
-        <a href="#experience">work</a>
-        <a href="#projects">projects</a>
-        <a href="#contact">contact</a>
-      </nav>
-    </div>
-  </header>
+<header class="top">
+  <div class="wrap top-row">
+    <a class="brand" href="#top" aria-label="Shiva Sai Reddy, home">
+      <span class="brand-mark" aria-hidden="true">✓</span> Shiva Sai Reddy
+    </a>
+    <nav aria-label="Main">
+      <a href="#work">Work</a>
+      <a href="#projects">Projects</a>
+      <a href="#background">Background</a>
+      <a class="nav-cta" href="assets/Shiva_Sai_Reddy_Resume.pdf">Resume</a>
+    </nav>
+  </div>
+</header>
 
-  <section class="hero">
-    <h1 class="name">Shiva Sai Reddy Bommireddy</h1>
-    <p class="blurb">
-      I build the backend systems that turn scanned insurance and medical documents into
-      structured, verified data.
-    </p>
-    <div class="hero-meta">
-      <div class="hero-meta-row"><span class="hm-label">now</span> Software Engineer at Singularium Technologies</div>
-      <div class="hero-meta-row"><span class="hm-label">grad</span> B.Tech CS, IIT Bhilai · 2023</div>
+<main id="top">
+
+  <!-- Hero: the thesis, and the thing itself: a receipt being checked -->
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <p class="eyebrow">Software Engineer · Singularium Technologies · IIT Bhilai CS</p>
+      <h1>I build AI systems that <mark>know when they're wrong.</mark></h1>
+      <p class="lede">
+        Document pipelines that read messy paperwork with OCR and language models, prove each value
+        before trusting it, and hand only the uncertain cases to a person. In production for 23
+        insurers, and open source in <a href="#docflow">docflow-ai</a>.
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://docflow-demo.onrender.com">Try the live demo <span aria-hidden="true">→</span></a>
+        <a class="btn" href="assets/Shiva_Sai_Reddy_Resume.pdf">Resume (PDF)</a>
+      </div>
+      <p class="links-line">
+        <a href="mailto:shivasaireddy2505@gmail.com">shivasaireddy2505@gmail.com</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://www.linkedin.com/in/bommireddy-shiva-sai-reddy-070708261/">LinkedIn</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://github.com/Shivasaireddy007">GitHub</a>
+      </p>
+    </div>
+
+    <figure class="receipt-stage" aria-label="A receipt being checked field by field">
+      <div class="receipt" id="receipt">
+        <p class="r-head">KEDAI MAKAN SRI MAJU</p>
+        <p class="r-sub">TAX INVOICE · 15/01/2019 · 13:42</p>
+        <ol class="r-lines">
+          <li><span>NASI LEMAK AYAM</span><span>12.90</span></li>
+          <li><span>TEH TARIK x2</span><span>26.00</span></li>
+          <li data-check><span>SUBTOTAL</span><span>38.90</span><i class="chip ok">✓ on the page</i></li>
+          <li data-check><span>SST 6%</span><span>2.33</span><i class="chip ok">✓ on the page</i></li>
+          <li data-check class="r-total"><span>TOTAL</span><span>RM 41.23</span><i class="chip ok" id="total-chip">✓ adds up</i></li>
+          <li data-check><span>CASH / CHANGE</span><span>50.00 / 8.77</span><i class="chip ok">✓ 50.00 − 8.77</i></li>
+        </ol>
+        <div class="stamp ok" id="stamp"><span id="stamp-title">Approved</span><small id="stamp-note">every value checked · no person needed</small></div>
+      </div>
+      <figcaption>
+        What <a href="#docflow">docflow-ai</a> does with every receipt: each value must be on the page
+        and the arithmetic must agree, or a person reviews it.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- Proof strip: the numbers from work -->
+  <section class="proof" aria-label="Results at Singularium">
+    <div class="wrap proof-grid">
+      <div><strong>10K+</strong><span>medical documents a day, for 23 insurers</span></div>
+      <div><strong>81%</strong><span>cleared without a person, against 200+ insurer rules</span></div>
+      <div><strong>~65%</strong><span>lower OCR spend after moving to self-hosted models</span></div>
+      <div><strong>99.9%</strong><span>uptime, with API p95 under 200 ms</span></div>
     </div>
   </section>
 
-  <section class="block" id="pipeline">
-    <h2 class="section-title">what I build</h2>
-    <p class="blurb" style="margin-bottom: 24px;">
-      <strong>Dockerized Lambda pipelines</strong>, OCR/IDP extraction, GPT-based validation, and
-      human-in-the-loop review, running at production scale on AWS.
-    </p>
-    <div class="diagram-frame">
-      <svg class="pipeline" viewBox="0 0 720 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Document processing pipeline: S3 upload flows to a Dockerized Lambda function, then OCR and IDP extraction, then GPT validation, then human review, then storage in RDS and DynamoDB.">
-        <g class="p-node">
-          <rect x="6" y="46" width="96" height="58" rx="3"/>
-          <text x="54" y="70" font-size="12" text-anchor="middle">S3 upload</text>
-          <text x="54" y="87" font-size="10" text-anchor="middle" class="sub">raw document</text>
-        </g>
-        <path class="p-edge draw" d="M102 75 H150" />
-        <g class="p-node">
-          <rect x="150" y="40" width="112" height="70" rx="3"/>
-          <text x="206" y="63" font-size="12" text-anchor="middle">Lambda</text>
-          <text x="206" y="79" font-size="10" text-anchor="middle" class="sub">Dockerized</text>
-          <text x="206" y="94" font-size="10" text-anchor="middle" class="sub">SHA-256 hash</text>
-        </g>
-        <path class="p-edge draw" d="M262 75 H310" />
-        <g class="p-node">
-          <rect x="310" y="34" width="120" height="82" rx="3"/>
-          <text x="370" y="58" font-size="12" text-anchor="middle">OCR / IDP</text>
-          <text x="370" y="74" font-size="10" text-anchor="middle" class="sub">Azure Doc Intel.</text>
-          <text x="370" y="88" font-size="10" text-anchor="middle" class="sub">DOTS OCR + vLLM</text>
-          <text x="370" y="102" font-size="10" text-anchor="middle" class="sub">Redis cached</text>
-        </g>
-        <path class="p-edge draw" d="M430 75 H478" />
-        <g class="p-node">
-          <rect x="478" y="40" width="112" height="70" rx="3"/>
-          <text x="534" y="63" font-size="12" text-anchor="middle">GPT rules</text>
-          <text x="534" y="79" font-size="10" text-anchor="middle" class="sub">insurer-specific</text>
-          <text x="534" y="94" font-size="10" text-anchor="middle" class="sub">branching</text>
-        </g>
-        <path class="p-edge draw" d="M590 75 H614 V26 H648" />
-        <path class="p-edge draw" d="M590 75 H614 V124 H648" />
-        <g class="p-node">
-          <rect x="648" y="6" width="66" height="40" rx="3"/>
-          <text x="681" y="24" font-size="10.5" text-anchor="middle">HITL</text>
-          <text x="681" y="37" font-size="9" text-anchor="middle" class="sub">review</text>
-        </g>
-        <g class="p-node">
-          <rect x="648" y="104" width="66" height="40" rx="3"/>
-          <text x="681" y="122" font-size="10.5" text-anchor="middle">RDS +</text>
-          <text x="681" y="135" font-size="9" text-anchor="middle" class="sub">DynamoDB</text>
-        </g>
-      </svg>
-      <p class="diagram-caption">The QC &amp; digitization pipeline I built and maintain in production — from raw upload to a human-reviewed, insurer-ready record.</p>
+  <!-- Work -->
+  <section id="work" class="wrap section">
+    <div class="section-head">
+      <h2>Work</h2>
+      <p>What I own, and what it changed.</p>
     </div>
-  </section>
 
-  <section class="block" id="experience">
-    <h2 class="section-title">experience</h2>
+    <article class="job">
+      <div class="job-meta">
+        <h3>Software Engineer</h3>
+        <p class="org">Singularium Technologies · Bengaluru</p>
+        <p class="when">Apr 2025 – present</p>
+      </div>
+      <div class="job-body">
+        <p>
+          I own the platform that turns insurers' medical paperwork (exams, pathology reports, claim
+          documents) into verified data: Django and Flask APIs, a React review app, and an AWS
+          pipeline that decides which documents a person needs to see.
+        </p>
 
-    <div class="job">
-      <div class="job-dates">Apr 2025 —<br>present</div>
-      <div>
-        <h3 class="job-role">Software Engineer</h3>
-        <p class="job-org">Singularium Technologies · Bengaluru</p>
-        <ul>
-          <li>Built Flask document-processing workflows and a doctor interpretation system, deployed with Gunicorn behind an Nginx reverse proxy for load balancing and rate limiting.</li>
-          <li>Developed an end-to-end QC and digitization system using Dockerized AWS Lambda functions with IDP-driven AI rule validation, insurer-specific branching, and HITL review — automated with GitHub Actions CI/CD.</li>
-          <li>Integrated DOTS OCR and vLLM on AWS g6.xlarge (L4 GPU) instances, resolving multi-VM migration issues and cutting monthly infra costs by roughly 45%.</li>
-          <li>Implemented SHA-256 content hashing at ingestion and a Redis caching layer for recurring Azure Document Intelligence and GPT API calls.</li>
-          <li>Engineered a dual-database storage layer — AWS RDS MySQL for structured workflows and DynamoDB with custom partition keys for low-latency retrieval.</li>
+        <div class="flow" aria-label="The pipeline I built">
+          <span>Upload to S3</span><b aria-hidden="true">→</b>
+          <span>Lambda · SHA-256</span><b aria-hidden="true">→</b>
+          <span>OCR · vLLM on GPU</span><b aria-hidden="true">→</b>
+          <span>GPT extraction</span><b aria-hidden="true">→</b>
+          <span>200+ insurer rules</span><b aria-hidden="true">→</b>
+          <span class="split"><em>81% cleared</em><em>19% to review</em></span>
+        </div>
+
+        <ul class="results">
+          <li><strong>Moved OCR from Azure to self-hosted models</strong> (DOTS OCR on vLLM, L4 GPUs): 12 pages a second at under 800 ms p95, and about 65% lower OCR spend across 40+ document types.</li>
+          <li><strong>Built the quality-check pipeline</strong> on Step Functions and container Lambdas: 81% of documents now clear on their own; canary releases, dead-letter queues and CloudWatch SLOs keep it safe to change.</li>
+          <li><strong>Cut repeat model calls</strong> with a content-addressed cache keyed by document hash and pipeline version: 34% hit rate, p95 under 40 ms instead of ~22 s, about $9K a month saved.</li>
+          <li><strong>Designed the storage split:</strong> RDS MySQL for claims, reviewers and audits; DynamoDB for low-latency lookups at sub-5 ms p99 across 25M+ items.</li>
         </ul>
-        <div class="tags">
-          <span class="tag">Python</span><span class="tag">Flask</span><span class="tag">Gunicorn</span>
-          <span class="tag">Nginx</span><span class="tag">AWS Lambda</span><span class="tag">Docker</span>
-          <span class="tag">MySQL</span><span class="tag">DynamoDB</span><span class="tag">Redis</span>
-          <span class="tag">IDP</span><span class="tag">OpenAI</span>
-        </div>
+        <p class="stack">Python · Django · Flask · React · AWS (Lambda, Step Functions, S3, DynamoDB, RDS) · Terraform · vLLM · Redis · GitHub Actions · OpenTelemetry</p>
       </div>
-    </div>
+    </article>
 
-    <div class="job">
-      <div class="job-dates">Dec 2023 —<br>Aug 2024</div>
-      <div>
-        <h3 class="job-role">Software Developer Intern</h3>
-        <p class="job-org">Novaluna Technologies · Remote</p>
-        <ul>
-          <li>Built an AI-powered Patient Coordination System in Node.js with TypeORM transactions, SQS-based async calendar webhook processing, and Socket.io real-time appointment updates.</li>
-          <li>Developed RESTful APIs for appointment filtering with JWT access control, backed by PostgreSQL with composite B-tree indexing.</li>
-          <li>Integrated an AI chatbot using deterministic LLM function-calling for automated patient triage.</li>
-          <li>Implemented Redis-based distributed locking (SET NX + TTL) with token-validated release around TypeORM transactional writes.</li>
+    <article class="job">
+      <div class="job-meta">
+        <h3>Software Developer Intern, founding team</h3>
+        <p class="org">Novaluna Technologies · Remote</p>
+        <p class="when">Dec 2023 – Aug 2024</p>
+      </div>
+      <div class="job-body">
+        <p>
+          Built the patient-coordination platform for 120+ providers across 15+ clinics: Node.js and
+          Next.js, PostgreSQL with TypeORM transactions, SQS for calendar webhooks, and Socket.io for
+          live appointment updates.
+        </p>
+        <ul class="results">
+          <li><strong>Appointment queries from 420 ms to under 25 ms</strong> across 1.2M+ rows, with composite indexes on provider, date and status.</li>
+          <li><strong>No double bookings</strong> across 15K+ attempts under concurrent webhooks, using Redis locks around the database transactions.</li>
+          <li><strong>A triage chatbot</strong> (OpenAI function calling, validated outputs, a confidence gate before human handoff) that routed 68% of 2K+ daily patient queries.</li>
         </ul>
-        <div class="tags">
-          <span class="tag">Node.js</span><span class="tag">Express</span><span class="tag">PostgreSQL</span>
-          <span class="tag">WebSockets</span><span class="tag">OpenAI API</span><span class="tag">REST</span><span class="tag">JWT</span>
+        <p class="stack">Node.js · Next.js · TypeScript · PostgreSQL · Redis · AWS SQS · Socket.io · OpenAI</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="section projects-band">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Projects</h2>
+        <p>Both are live. Click through and use them.</p>
+      </div>
+
+      <article class="case" id="docflow">
+        <div class="case-copy">
+          <p class="eyebrow">Open source · AI document processing</p>
+          <h3>docflow-ai</h3>
+          <p>
+            A multi-tenant platform that reads receipts with self-hosted models and approves one only
+            when every value is found on the page and the receipt's own arithmetic agrees. Everything
+            else goes to a review queue, with the reason.
+          </p>
+          <dl class="stats">
+            <div><dt>52%</dt><dd>approved with no person, on 191 labelled receipts</dd></div>
+            <div><dt>0</dt><dd>wrong totals approved, across two public datasets</dd></div>
+            <div><dt>96%</dt><dd>of totals read right, up from 49% after a second dataset exposed a decimal bug</dd></div>
+          </dl>
+          <p class="stack">Django · React · PostgreSQL · Redis · Qwen2.5-VL on Ollama / vLLM · AWS Step Functions · Terraform · Prometheus · Grafana</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://docflow-demo.onrender.com">Live demo <span aria-hidden="true">→</span></a>
+            <a class="btn" href="https://github.com/Shivasaireddy007/docflow-ai">GitHub</a>
+            <a class="btn btn-quiet" href="https://github.com/Shivasaireddy007/docflow-ai/blob/main/docs/evaluation/README.md">How it was measured</a>
+          </div>
         </div>
+        <figure class="shot">
+          <img src="assets/docflow-review.webp" width="1400" height="875" loading="lazy"
+               alt="docflow review screen: a receipt photo beside its extracted fields, with two failed rules explaining why it needs a person">
+          <figcaption>The review screen: which rules failed, and the checks behind every field.</figcaption>
+        </figure>
+      </article>
+
+      <article class="case case-stack" id="cart">
+        <div class="case-copy">
+          <p class="eyebrow">Full stack · E-commerce</p>
+          <h3>Shopping Cart System</h3>
+          <p>
+            A storefront and admin panel that never oversells: ten buyers racing for three units get
+            exactly three sales, because checkout locks the stock row. Orders flow to shipping
+            through Kafka with a transactional outbox, and search is faceted in OpenSearch.
+          </p>
+          <dl class="stats">
+            <div><dt>3 of 10</dt><dd>buyers get the 3 units in the live race; 7 told it's sold out</dd></div>
+            <div><dt>5.5 ms</dt><dd>catalog p95 at 1,000 requests a second, down from 99 ms, with Redis</dd></div>
+            <div><dt>0</dt><dd>dropped requests under that load</dd></div>
+          </dl>
+          <p class="stack">FastAPI · React · PostgreSQL · Redis · Kafka · OpenSearch · Razorpay · Docker · Kubernetes</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://shopping-cart-uc56.onrender.com/how-it-works">Run the oversell race <span aria-hidden="true">→</span></a>
+            <a class="btn" href="https://github.com/Shivasaireddy007/shopping_cart_system">GitHub</a>
+          </div>
+        </div>
+        <figure class="shot">
+          <img src="assets/cart-oversell.webp" width="1536" height="390" loading="lazy"
+               alt="Ten simultaneous checkouts for three units: buyers 3, 4 and 5 bought, the other seven were told it's sold out">
+          <figcaption>The live race: 3 bought, 7 sold out, stock exactly zero.</figcaption>
+        </figure>
+      </article>
+
+      <p class="demo-note">The demos run on free hosting: the first visit after a quiet spell can take up to a minute to wake.</p>
+    </div>
+  </section>
+
+  <!-- Background -->
+  <section id="background" class="wrap section">
+    <div class="section-head">
+      <h2>Background</h2>
+    </div>
+    <div class="bg-grid">
+      <div class="bg-item">
+        <h3>IIT Bhilai</h3>
+        <p>B.Tech in Computer Science, 2019 – 2023.</p>
+      </div>
+      <div class="bg-item">
+        <h3>JEE Advanced 2019: AIR 4597</h3>
+        <p>Among 1.2 million candidates, and the Geet Amal Ghosh Roy Award for the top JEE rank in IIT Bhilai's 2019 batch.</p>
+      </div>
+      <div class="bg-item">
+        <h3>1,000+ problems solved</h3>
+        <p>5-star and gold badges in C++, Python and Problem Solving on
+          <a href="https://www.hackerrank.com/shivasai252002">HackerRank</a>; also on
+          <a href="https://leetcode.com/shivasaireddy/">LeetCode</a>.</p>
       </div>
     </div>
   </section>
 
-  <section class="block" id="projects">
-    <h2 class="section-title">projects</h2>
-    <div class="projects-grid">
-      <div class="project-card">
-        <h3>Shopping Cart System</h3>
-        <p>Full-scale eCommerce platform with product/order modules, authentication, and secure payment and shipping API integrations — improved MySQL query performance by 85% using Redis and Elasticsearch caching.</p>
-        <div class="tags">
-          <span class="tag">Django</span><span class="tag">PHP</span><span class="tag">MySQL</span>
-          <span class="tag">Docker</span><span class="tag">Redis</span><span class="tag">Elasticsearch</span>
-        </div>
-        <a href="#">View on GitHub →</a>
-      </div>
-      <div class="project-card">
-        <h3>Drive and Deliver Services</h3>
-        <p>Real-time ride-sharing and delivery platform with WebSocket-based communication, GraphQL APIs, PostgreSQL, and MongoDB — supporting driver-rider matching, live location updates, and delivery workflows.</p>
-        <div class="tags">
-          <span class="tag">TypeScript</span><span class="tag">Node.js</span><span class="tag">React</span>
-          <span class="tag">GraphQL</span><span class="tag">Kafka</span><span class="tag">Kubernetes</span>
-        </div>
-        <a href="#">View on GitHub →</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="block">
-    <h2 class="section-title">achievements &amp; certifications</h2>
-    <ul class="ach-list">
-      <li>5-star rating and Gold Badge in C++, Python, and Problem Solving on HackerRank.</li>
-      <li>All India Rank 4597 in JEE Advanced 2019, among 1.2 million candidates.</li>
-      <li>Geet Amal Ghosh Roy Award — top rank in JEE Advanced among IIT Bhilai's 2019 batch.</li>
-      <li>1000+ problems solved across LeetCode, HackerRank, and other coding platforms.</li>
-    </ul>
-  </section>
-
-  <section class="block">
-    <h2 class="section-title">education</h2>
-    <div class="edu-row">
+  <section id="contact" class="contact">
+    <div class="wrap contact-row">
       <div>
-        <div class="edu-school">Indian Institute of Technology (IIT) Bhilai</div>
-        <div class="edu-degree">B.Tech in Computer Science</div>
+        <h2>Let's talk.</h2>
+        <p>I'm open to backend, platform and AI-infrastructure roles.</p>
       </div>
-      <div class="edu-dates">2019 — 2023</div>
+      <div class="actions">
+        <a class="btn btn-primary" href="mailto:shivasaireddy2505@gmail.com">Email me</a>
+        <a class="btn" href="https://www.linkedin.com/in/bommireddy-shiva-sai-reddy-070708261/">LinkedIn</a>
+        <a class="btn" href="https://github.com/Shivasaireddy007">GitHub</a>
+      </div>
     </div>
   </section>
+</main>
 
-  <footer id="contact">
-    <h2 class="section-title">contact</h2>
-    <div class="contact-links">
-      <div><span class="lbl">email</span><a href="mailto:shivasaireddy2505@gmail.com">shivasaireddy2505@gmail.com</a></div>
-      <div><span class="lbl">phone</span><a href="tel:+919390246254">+91 93902 46254</a></div>
-      <div><span class="lbl">linkedin</span><a href="#" id="linkedin-link">add your URL</a></div>
-      <div><span class="lbl">github</span><a href="#" id="github-link">add your URL</a></div>
-    </div>
-    <p class="foot-note">Built by Shiva Sai Reddy Bommireddy.</p>
-  </footer>
-</div>
+<footer class="wrap foot">
+  <p>Shiva Sai Reddy Bommireddy · Bengaluru · Off the keyboard, usually watching cricket.</p>
+</footer>
 
+<script src="receipt.js" defer></script>
 </body>
 </html>
