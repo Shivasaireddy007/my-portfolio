@@ -281,7 +281,7 @@ nav .nav-cta { color: var(--ink); border: 1px solid var(--ink); padding: 5px 12p
 .contact .btn { background: transparent; color: var(--paper); border-color: color-mix(in srgb, var(--paper) 35%, transparent); }
 .contact .btn:hover { border-color: var(--paper); }
 .contact .btn-primary { background: var(--mark); color: var(--mark-ink); border-color: var(--mark); }
-.foot { padding-block: 28px 40px; color: var(--muted); font-size: 0.88rem; }
+.foot { padding-block: 0 36px; color: color-mix(in srgb, var(--paper) 55%, var(--ink)); font-size: 0.88rem; border-top: 1px solid color-mix(in srgb, var(--paper) 14%, transparent); padding-top: 22px; }
 
 /* Narrow screens */
 @media (max-width: 900px) {
@@ -336,3 +336,21 @@ nav .nav-cta { color: var(--ink); border: 1px solid var(--ink); padding: 5px 12p
 .greet { display: inline-block; color: var(--ink); transition: opacity 0.26s, transform 0.26s; }
 .greet.is-out { opacity: 0; transform: translateY(-6px); }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Slides: each section holds its place while the next one slides over it */
+.slide {
+  position: sticky;
+  top: var(--stick, 60px);
+  background: var(--paper);
+}
+.slide:not(.slide-first) {
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -1px 0 var(--line), 0 -24px 48px -28px rgb(17 26 36 / 40%);
+}
+.slide.projects-band { background: var(--band); border-block: 0; }
+.slide.contact { background: var(--ink); }
+[id] { scroll-margin-top: 72px; }
+@media (prefers-reduced-motion: reduce) {
+  .slide { position: static; }
+  .slide:not(.slide-first) { border-radius: 0; box-shadow: none; }
+}
