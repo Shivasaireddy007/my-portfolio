@@ -327,3 +327,8 @@ nav .nav-cta { color: var(--ink); border: 1px solid var(--ink); padding: 5px 12p
 .case-media { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(20px, 3vw, 40px); align-items: center; }
 .case-media .receipt-stage { align-self: start; }
 @media (max-width: 900px) { .case-media { grid-template-columns: minmax(0, 1fr); } }
+
+/* Rotating greeting */
+.greet { display: inline-block; color: var(--ink); font-weight: 600; transition: opacity 0.26s, transform 0.26s; }
+.greet.is-out { opacity: 0; transform: translateY(-6px); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
