@@ -1,8 +1,8 @@
-// "Hi, I'm" in a few languages, one after another. Screen readers get a plain "Hi".
+// "Hi, I'm" in a few languages, written in English letters, one after another. Screen readers get a plain "Hi".
 (() => {
   const el = document.getElementById('greet')
   if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return
-  const greetings = ['Hi', 'Hola', 'Bonjour', 'నమస్కారం', 'नमस्ते', 'Ciao', 'Hallo', 'Olá', 'こんにちは', 'Hello']
+  const greetings = ['Hi', 'Hola', 'Bonjour', 'Namaskaram', 'Namaste', 'Ciao', 'Hallo', 'Olá', 'Konnichiwa', 'Hello']
   let i = 0
   setInterval(() => {
     if (document.hidden) return
