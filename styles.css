@@ -299,3 +299,31 @@ nav .nav-cta { color: var(--ink); border: 1px solid var(--ink); padding: 5px 12p
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* Hero: who I am */
+.hello { font: 500 var(--step-1)/1 var(--body); color: var(--muted); }
+.hero h1 { font-size: clamp(2.3rem, 1.3rem + 3.6vw, 4rem); }
+.role { font: 600 var(--step-2)/1.25 var(--display); letter-spacing: -0.01em; }
+.hero-copy { gap: 18px; }
+.glance {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+  padding: clamp(18px, 2.5vw, 28px); box-shadow: var(--shadow);
+}
+.glance dl { margin: 0; display: grid; }
+.glance dl > div { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 12px; padding-block: 13px; border-top: 1px solid var(--line); }
+.glance dl > div:first-child { border-top: 0; padding-top: 0; }
+.glance dl > div:last-child { padding-bottom: 0; }
+.glance dt { font: 500 0.74rem/1.7 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.glance dd { margin: 0; display: grid; gap: 2px; font-weight: 600; line-height: 1.35; }
+.glance dd span { font-weight: 400; color: var(--muted); font-size: 0.9rem; }
+.glance .open { display: inline-flex; align-items: center; gap: 7px; color: var(--ok); font-weight: 600; }
+.glance .open b { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px var(--ok-soft); }
+
+/* About */
+.about { padding-bottom: 0; }
+.about-body { display: grid; gap: 16px; max-width: 68ch; font-size: var(--step-1); color: var(--muted); }
+
+/* docflow: the receipt beside the real review screen */
+.case-media { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(20px, 3vw, 40px); align-items: center; }
+.case-media .receipt-stage { align-self: start; }
+@media (max-width: 900px) { .case-media { grid-template-columns: minmax(0, 1fr); } }

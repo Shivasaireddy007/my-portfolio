@@ -24,6 +24,7 @@
     <nav aria-label="Main">
       <a href="#work">Work</a>
       <a href="#projects">Projects</a>
+      <a href="#about">About</a>
       <a href="#background">Background</a>
       <a class="nav-cta" href="assets/Shiva_Sai_Reddy_Resume.pdf">Resume</a>
     </nav>
@@ -32,48 +33,39 @@
 
 <main id="top">
 
-  <!-- Hero: the thesis, and the thing itself: a receipt being checked -->
+  <!-- Hero: who I am -->
   <section class="hero wrap">
     <div class="hero-copy">
-      <p class="eyebrow">Software Engineer · Singularium Technologies · IIT Bhilai CS</p>
-      <h1>I build AI systems that <mark>know when they're wrong.</mark></h1>
+      <p class="hello">Hi, I'm</p>
+      <h1>Shiva Sai Reddy Bommireddy</h1>
+      <p class="role">Software Engineer at Singularium Technologies</p>
       <p class="lede">
-        Document pipelines that read messy paperwork with OCR and language models, prove each value
-        before trusting it, and hand only the uncertain cases to a person. In production for 23
-        insurers, and open source in <a href="#docflow">docflow-ai</a>.
+        I build backend and AI systems that turn messy real-world documents into data people can
+        trust: self-hosted OCR and language models, AWS pipelines, and checks that
+        <mark>know when the AI is wrong</mark>, so a person only sees what needs one.
       </p>
       <div class="actions">
-        <a class="btn btn-primary" href="https://docflow-demo.onrender.com">Try the live demo <span aria-hidden="true">→</span></a>
-        <a class="btn" href="assets/Shiva_Sai_Reddy_Resume.pdf">Resume (PDF)</a>
+        <a class="btn btn-primary" href="assets/Shiva_Sai_Reddy_Resume.pdf">Resume (PDF)</a>
+        <a class="btn" href="mailto:shivasaireddy2505@gmail.com">Email me</a>
       </div>
       <p class="links-line">
-        <a href="mailto:shivasaireddy2505@gmail.com">shivasaireddy2505@gmail.com</a>
-        <span aria-hidden="true">·</span>
         <a href="https://www.linkedin.com/in/bommireddy-shiva-sai-reddy-070708261/">LinkedIn</a>
         <span aria-hidden="true">·</span>
         <a href="https://github.com/Shivasaireddy007">GitHub</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://leetcode.com/shivasaireddy/">LeetCode</a>
       </p>
     </div>
 
-    <figure class="receipt-stage" aria-label="A receipt being checked field by field">
-      <div class="receipt" id="receipt">
-        <p class="r-head">KEDAI MAKAN SRI MAJU</p>
-        <p class="r-sub">TAX INVOICE · 15/01/2019 · 13:42</p>
-        <ol class="r-lines">
-          <li><span>NASI LEMAK AYAM</span><span>12.90</span></li>
-          <li><span>TEH TARIK x2</span><span>26.00</span></li>
-          <li data-check><span>SUBTOTAL</span><span>38.90</span><i class="chip ok">✓ on the page</i></li>
-          <li data-check><span>SST 6%</span><span>2.33</span><i class="chip ok">✓ on the page</i></li>
-          <li data-check class="r-total"><span>TOTAL</span><span>RM 41.23</span><i class="chip ok" id="total-chip">✓ adds up</i></li>
-          <li data-check><span>CASH / CHANGE</span><span>50.00 / 8.77</span><i class="chip ok">✓ 50.00 − 8.77</i></li>
-        </ol>
-        <div class="stamp ok" id="stamp"><span id="stamp-title">Approved</span><small id="stamp-note">every value checked · no person needed</small></div>
-      </div>
-      <figcaption>
-        What <a href="#docflow">docflow-ai</a> does with every receipt: each value must be on the page
-        and the arithmetic must agree, or a person reviews it.
-      </figcaption>
-    </figure>
+    <aside class="glance" aria-label="At a glance">
+      <dl>
+        <div><dt>Now</dt><dd>Software Engineer, Singularium Technologies<span>Document AI platform for 23 insurers</span></dd></div>
+        <div><dt>Before</dt><dd>Software Developer Intern, Novaluna Technologies<span>Founding team, healthcare scheduling</span></dd></div>
+        <div><dt>Education</dt><dd>B.Tech Computer Science, IIT Bhilai<span>2019 – 2023 · JEE Advanced AIR 4597</span></dd></div>
+        <div><dt>Focus</dt><dd>Backend, platform and AI infrastructure<span>Python · Django · AWS · vLLM · PostgreSQL</span></dd></div>
+        <div><dt>Based in</dt><dd>Bengaluru, India<span class="open"><b aria-hidden="true"></b>Open to new roles</span></dd></div>
+      </dl>
+    </aside>
   </section>
 
   <!-- Proof strip: the numbers from work -->
@@ -83,6 +75,26 @@
       <div><strong>81%</strong><span>cleared without a person, against 200+ insurer rules</span></div>
       <div><strong>~65%</strong><span>lower OCR spend after moving to self-hosted models</span></div>
       <div><strong>99.9%</strong><span>uptime, with API p95 under 200 ms</span></div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="wrap section about">
+    <div class="section-head">
+      <h2>About me</h2>
+    </div>
+    <div class="about-body">
+      <p>
+        I enjoy building systems that hold up under real production pressure, not just demos.
+        Most of my work sits where software meets messy reality: scanned medical reports, crumpled
+        receipts, insurers with two hundred different rules, and models that are confidently wrong.
+        I like measuring before claiming, and designing so that when something fails, it fails
+        safely and visibly.
+      </p>
+      <p>
+        I'm a Computer Science graduate of IIT Bhilai. Outside work I follow the latest in AI
+        infrastructure, and enjoy following cricket.
+      </p>
     </div>
   </section>
 
@@ -155,7 +167,7 @@
         <p>Both are live. Click through and use them.</p>
       </div>
 
-      <article class="case" id="docflow">
+      <article class="case case-stack" id="docflow">
         <div class="case-copy">
           <p class="eyebrow">Open source · AI document processing</p>
           <h3>docflow-ai</h3>
@@ -176,11 +188,33 @@
             <a class="btn btn-quiet" href="https://github.com/Shivasaireddy007/docflow-ai/blob/main/docs/evaluation/README.md">How it was measured</a>
           </div>
         </div>
+
+        <div class="case-media">
+      <figure class="receipt-stage" aria-label="A receipt being checked field by field">
+        <div class="receipt" id="receipt">
+          <p class="r-head">KEDAI MAKAN SRI MAJU</p>
+          <p class="r-sub">TAX INVOICE · 15/01/2019 · 13:42</p>
+          <ol class="r-lines">
+            <li><span>NASI LEMAK AYAM</span><span>12.90</span></li>
+            <li><span>TEH TARIK x2</span><span>26.00</span></li>
+            <li data-check><span>SUBTOTAL</span><span>38.90</span><i class="chip ok">✓ on the page</i></li>
+            <li data-check><span>SST 6%</span><span>2.33</span><i class="chip ok">✓ on the page</i></li>
+            <li data-check class="r-total"><span>TOTAL</span><span>RM 41.23</span><i class="chip ok" id="total-chip">✓ adds up</i></li>
+            <li data-check><span>CASH / CHANGE</span><span>50.00 / 8.77</span><i class="chip ok">✓ 50.00 − 8.77</i></li>
+          </ol>
+          <div class="stamp ok" id="stamp"><span id="stamp-title">Approved</span><small id="stamp-note">every value checked · no person needed</small></div>
+        </div>
+        <figcaption>
+          What docflow-ai does with every receipt: each value must be on the page
+          and the arithmetic must agree, or a person reviews it.
+        </figcaption>
+      </figure>
         <figure class="shot">
           <img src="assets/docflow-review.webp" width="1400" height="875" loading="lazy"
                alt="docflow review screen: a receipt photo beside its extracted fields, with two failed rules explaining why it needs a person">
           <figcaption>The review screen: which rules failed, and the checks behind every field.</figcaption>
         </figure>
+        </div>
       </article>
 
       <article class="case case-stack" id="cart">
