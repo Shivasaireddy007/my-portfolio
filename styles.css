@@ -337,20 +337,13 @@ nav .nav-cta { color: var(--ink); border: 1px solid var(--ink); padding: 5px 12p
 .greet.is-out { opacity: 0; transform: translateY(-6px); }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-/* Slides: each section holds its place while the next one slides over it */
-.slide {
-  position: sticky;
-  top: var(--stick, 60px);
-  background: var(--paper);
+
+/* Entrance: sections slide in from the left as they come into view */
+html { overflow-x: clip; }
+.reveal-ready .reveal {
+  opacity: 0;
+  transform: translateX(-72px);
+  transition: opacity 0.7s ease, transform 0.85s cubic-bezier(0.16, 0.8, 0.24, 1);
+  transition-delay: var(--delay, 0ms);
 }
-.slide:not(.slide-first) {
-  border-radius: 24px 24px 0 0;
-  box-shadow: 0 -1px 0 var(--line), 0 -24px 48px -28px rgb(17 26 36 / 40%);
-}
-.slide.projects-band { background: var(--band); border-block: 0; }
-.slide.contact { background: var(--ink); }
-[id] { scroll-margin-top: 72px; }
-@media (prefers-reduced-motion: reduce) {
-  .slide { position: static; }
-  .slide:not(.slide-first) { border-radius: 0; box-shadow: none; }
-}
+.reveal-ready .reveal.is-in { opacity: 1; transform: none; }
