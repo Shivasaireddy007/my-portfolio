@@ -347,3 +347,7 @@ html { overflow-x: clip; }
   transition-delay: var(--delay, 0ms);
 }
 .reveal-ready .reveal.is-in { opacity: 1; transform: none; }
+
+/* Phil's-ophy: the book image sits on its own white page in every theme */
+.philsophy { background: #ffffff; padding: clamp(32px, 6vw, 72px) 16px; display: grid; place-items: center; }
+.philsophy img { width: min(860px, 100%); }
